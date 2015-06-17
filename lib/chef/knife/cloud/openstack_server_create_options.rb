@@ -67,6 +67,17 @@ class Chef
             :long => "--metadata X=1",
             :description => "Metadata information for this server (may pass multiple times)",
             :proc => Proc.new { |data| Chef::Config[:knife][:metadata] ||= {}; Chef::Config[:knife][:metadata].merge!({data.split('=')[0]=>data.split('=')[1]})}
+
+            option :node_ssl_verify_mode,
+            :long        => "--node-ssl-verify-mode [peer|none]",
+            :description => "Whether or not to verify the SSL cert for all HTTPS requests.",
+            :proc        => Proc.new { |v|
+              valid_values = ["none", "peer"]
+              unless valid_values.include?(v)
+                raise "Invalid value '#{v}' for --node-ssl-verify-mode. Valid values are: #{valid_values.join(", ")}"
+              end
+            }
+            
           end
         end
       end
